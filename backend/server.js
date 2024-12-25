@@ -2,6 +2,9 @@ const appRoutes = require("./routes/router");
 const dotenv = require("dotenv");
 const express = require("express");
 
+const createTables = require("./models/models_handler");
+createTables();
+
 dotenv.config();
 const app = express();
 
