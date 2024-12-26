@@ -4,7 +4,7 @@ import Register from "../components/authentication/Register";
 
 const AuthPage = () => {
     return (
-        <Container maxW="2xl" centerContent>
+        <Container maxW="2xl" centerContent marginBottom={"50px"}>
             <Box display="flex" justifyContent="center" p="3" bg="#2C3E50" w="100%" m="40px 0 15px 0" borderRadius="lg">
                 <Text fontSize={"4xl"} fontFamily={"Work Sans"} color={"white"}>
                     Chatify
