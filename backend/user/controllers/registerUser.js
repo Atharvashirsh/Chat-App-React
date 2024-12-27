@@ -1,5 +1,5 @@
 const UserServices = require("../services/servicesHandler");
-const AuthUtils = require("../utils/generateToken");
+const AuthUtils = require("../../utils/auth/authUtils");
 
 const registerUser = async (request, response) => {
     if (!request.body) {
@@ -18,6 +18,8 @@ const registerUser = async (request, response) => {
     }
 
     const userData = { name, email, password, pic };
+    userData.password = AuthUtils.generateHash(password);
+
     const addUser = await UserServices.addNewUser(userData);
 
     if (addUser.affectedRows > 0) {
