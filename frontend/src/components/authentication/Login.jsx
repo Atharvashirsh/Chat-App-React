@@ -1,6 +1,7 @@
 import { Input, Button, Fieldset, Text } from "@chakra-ui/react";
 import { Field } from "../ui/field";
 import { useForm } from "react-hook-form";
+import axios, { AxiosError } from "axios";
 
 const Login = () => {
     // const [email, setEmail] = useState("");
@@ -12,9 +13,21 @@ const Login = () => {
         formState: { errors },
     } = useForm();
 
-    const formSubmit = (data) => {
-        console.log(data);
-        reset();
+    const formSubmit = async (data) => {
+        console.log("Form data:");
+        console.table(data);
+        try {
+            const response = await axios.post("http://localhost:3000/api/user/login", data);
+            console.log(response.data);
+            alert(response.data.message);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.log(error.response.data);
+                alert(error.response.data.message);
+            }
+        } finally {
+            reset();
+        }
     };
 
     return (
