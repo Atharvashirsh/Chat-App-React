@@ -7,7 +7,7 @@ const createUsersModel = () => {
             name VARCHAR(255) NOT NULL,
             email VARCHAR(255) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
-            pic VARCHAR(255) DEFAULT "https://res.cloudinary.com/dpzfaadas/image/upload/v1735139847/yrazfwylraazysj1jv46.svg",
+            pic VARCHAR(255) DEFAULT "https://w7.pngwing.com/pngs/717/24/png-transparent-computer-icons-user-profile-user-account-avatar-heroes-silhouette-black-thumbnail.png",
             isadmin BOOLEAN NOT NULL DEFAULT FALSE
         )
     `;

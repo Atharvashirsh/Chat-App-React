@@ -1,4 +1,4 @@
-const appRoutes = require("./routes/router");
+const userRoutes = require("./user/userRouter");
 const dotenv = require("dotenv");
 const express = require("express");
 
@@ -8,7 +8,8 @@ createTables();
 dotenv.config();
 const app = express();
 
-app.use("/api", appRoutes);
+app.use(express.json());
+app.use("/api/user", userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
