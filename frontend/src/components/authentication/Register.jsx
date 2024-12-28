@@ -4,13 +4,11 @@ import { Field } from "../ui/field";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
-// import dotenv from "dotenv";
-// dotenv.config({ path: ".env" });
 
 const Register = () => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    // const [password, setPassword] = useState("");
+
     const {
         register,
         handleSubmit,
@@ -21,17 +19,9 @@ const Register = () => {
     } = useForm();
 
     const handleFileChange = (event) => {
-        // const filePath = event.target.value;
-        // setFile(filePath);
-
-        // if (filePath && filePath[0]) {
-        //     setValue("file", filePath);
-        //     setValue("file", filePath);
-        // }
         const file = event.target.files[0];
         if (file) {
             setFile(file);
-            // setSelectedFile(file);
         }
     };
 
@@ -47,24 +37,18 @@ const Register = () => {
                 imageForm.append("file", file);
                 imageForm.append("upload_preset", uploadPreset);
                 imageForm.append("cloud_name", cloudName);
-                console.log(imageForm, image_upload_url);
-                console.log(cloudName, uploadPreset);
 
                 const imageResponse = await axios.post(image_upload_url, imageForm);
                 const imageUrl = imageResponse.data.url;
-                console.log(imageUrl);
+
                 data.pic = imageUrl;
             }
 
-            console.log("Form data:");
-            console.table(data);
             const response = await axios.post("http://localhost:3000/api/user", data);
-            console.log(response.data);
 
             alert(response.data.message);
         } catch (error) {
             if (error instanceof AxiosError) {
-                console.log(error.response.data);
                 alert(error.response.data.message);
             }
             alert(error.message ?? "An error occured");
@@ -73,8 +57,6 @@ const Register = () => {
             setFile(null);
             reset();
         }
-        // setFile(null);
-        // reset();
     };
 
     const handlePasswordChange = (event) => {
@@ -101,13 +83,11 @@ const Register = () => {
                                 required: "Name is required",
                             })}
                             type="text"
-                            // value={email}
                             fontSize={"md"}
                             color={"black"}
                             backgroundColor={"white"}
                             placeholder="Enter your name"
                             autoComplete="off"
-                            // onChange={(e) => setEmail(e.target.value)}
                         />
                         {errors.name && (
                             <Text color="red.500" fontSize="sm" fontWeight={"bold"}>
@@ -121,13 +101,11 @@ const Register = () => {
                                 required: "Email is required",
                             })}
                             type="email"
-                            // value={email}
                             fontSize={"md"}
                             color={"black"}
                             backgroundColor={"white"}
                             placeholder="Enter your email"
                             autoComplete="off"
-                            // onChange={(e) => setEmail(e.target.value)}
                         />
                         {errors.email && (
                             <Text color="red.500" fontSize="sm" fontWeight={"bold"}>
@@ -142,12 +120,10 @@ const Register = () => {
                                 required: "Password is required",
                             })}
                             type="password"
-                            // value={password}
                             fontSize={"md"}
                             color={"black"}
                             backgroundColor={"white"}
                             placeholder="Enter your password"
-                            // onChange={(e) => setPassword(e.target.value)}
                         />
                     </Field>
                     {errors.password && (
@@ -161,7 +137,6 @@ const Register = () => {
                                 required: "This field is required",
                             })}
                             type="password"
-                            // value={password}
                             fontSize={"md"}
                             color={"black"}
                             backgroundColor={"white"}
@@ -176,26 +151,6 @@ const Register = () => {
                     )}
 
                     <Field label="Upload Picture" color="white">
-                        {/* <FileUploadRoot maxFiles={1} accept={["image/png", "image/jpg", "image/jpeg"]} onChange={handleFileChange}>
-                            <FileUploadTrigger asChild>
-                                <Button variant="outline" w={"100%"} size="sm" color={"white"}>
-                                    <HiUpload /> Click to upload image
-                                </Button>
-                            </FileUploadTrigger>
-                            {file && <FileUploadList showSize clearable />}
-                        </FileUploadRoot> */}
-                        {/* <Input
-                            {...register("file", {
-                                required: "This field is required",
-                            })}
-                            type="file"
-                            // value={password}
-                            fontSize={"md"}
-                            color={"black"}
-                            backgroundColor={"white"}
-                            placeholder="Confirm your password"
-                            // onChange={(e) => setPassword(e.target.value)}
-                        /> */}
                         <Input
                             padding={"1.5"}
                             paddingLeft={"2"}
