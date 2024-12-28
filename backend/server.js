@@ -2,9 +2,9 @@ const userRoutes = require("./user/userRouter");
 const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
-
 const createTables = require("./models/models_handler");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+
 createTables();
 
 dotenv.config();
