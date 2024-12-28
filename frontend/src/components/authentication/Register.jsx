@@ -1,37 +1,94 @@
-import { Button, Fieldset, Input, Text } from "@chakra-ui/react";
+import { Fieldset, Input, Text } from "@chakra-ui/react";
+import { Button } from "../ui/button";
 import { Field } from "../ui/field";
-import { FileUploadList, FileUploadRoot, FileUploadTrigger } from "../ui/file-upload";
 import { useForm } from "react-hook-form";
-import { HiUpload } from "react-icons/hi";
 import { useState } from "react";
+import axios, { AxiosError } from "axios";
+// import dotenv from "dotenv";
+// dotenv.config({ path: ".env" });
 
 const Register = () => {
     const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
     // const [password, setPassword] = useState("");
     const {
         register,
         handleSubmit,
         reset,
         getValues,
-        setValue,
+        setError,
         formState: { errors },
     } = useForm();
 
     const handleFileChange = (event) => {
-        const filePath = event.target.value;
-        setFile(filePath);
+        // const filePath = event.target.value;
+        // setFile(filePath);
 
-        if (filePath && filePath[0]) {
-            setValue("file", filePath);
+        // if (filePath && filePath[0]) {
+        //     setValue("file", filePath);
+        //     setValue("file", filePath);
+        // }
+        const file = event.target.files[0];
+        if (file) {
+            setFile(file);
+            // setSelectedFile(file);
         }
     };
 
-    const formSubmit = (data) => {
-        data.file = getValues("file");
-        console.table(data);
+    const formSubmit = async (data) => {
+        setLoading(true);
+        try {
+            if (file) {
+                const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+                const uploadPreset = import.meta.env.VITE_CLOUDINARY_PRESET;
 
-        setFile(null);
-        reset();
+                const image_upload_url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+                const imageForm = new FormData();
+                imageForm.append("file", file);
+                imageForm.append("upload_preset", uploadPreset);
+                imageForm.append("cloud_name", cloudName);
+                console.log(imageForm, image_upload_url);
+                console.log(cloudName, uploadPreset);
+
+                const imageResponse = await axios.post(image_upload_url, imageForm);
+                const imageUrl = imageResponse.data.url;
+                console.log(imageUrl);
+                data.pic = imageUrl;
+            }
+
+            console.log("Form data:");
+            console.table(data);
+            const response = await axios.post("http://localhost:3000/api/user", data);
+            console.log(response.data);
+
+            alert(response.data.message);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.log(error.response.data);
+                alert(error.response.data.message);
+            }
+            alert(error.message ?? "An error occured");
+        } finally {
+            setLoading(false);
+            setFile(null);
+            reset();
+        }
+        // setFile(null);
+        // reset();
+    };
+
+    const handlePasswordChange = (event) => {
+        const confirmPassword = event.target.value;
+        const password = getValues("password");
+
+        if (confirmPassword !== password) {
+            setError("password", {
+                type: "manual",
+                message: "Passwords do not match",
+            });
+        } else {
+            setError("password", null);
+        }
     };
 
     return (
@@ -94,7 +151,7 @@ const Register = () => {
                         />
                     </Field>
                     {errors.password && (
-                        <Text color="red.500" fontSize="sm" fontWeight={"bold"}>
+                        <Text color="red" fontSize="sm" fontWeight={"bold"}>
                             {errors.password.message}
                         </Text>
                     )}
@@ -109,28 +166,58 @@ const Register = () => {
                             color={"black"}
                             backgroundColor={"white"}
                             placeholder="Confirm your password"
-                            // onChange={(e) => setPassword(e.target.value)}
+                            onChange={handlePasswordChange}
                         />
                     </Field>
-                    {errors.confirmPassword && (
-                        <Text color="red.500" fontSize="sm" fontWeight={"bold"}>
-                            {errors.confirmPassword.message}
+                    {errors.password && (
+                        <Text color="red" fontSize="sm" fontWeight={"bold"}>
+                            {errors.password.message}
                         </Text>
                     )}
 
                     <Field label="Upload Picture" color="white">
-                        <FileUploadRoot maxFiles={1} accept={["image/png", "image/jpg", "image/jpeg"]} onChange={handleFileChange}>
+                        {/* <FileUploadRoot maxFiles={1} accept={["image/png", "image/jpg", "image/jpeg"]} onChange={handleFileChange}>
                             <FileUploadTrigger asChild>
                                 <Button variant="outline" w={"100%"} size="sm" color={"white"}>
                                     <HiUpload /> Click to upload image
                                 </Button>
                             </FileUploadTrigger>
                             {file && <FileUploadList showSize clearable />}
-                        </FileUploadRoot>
+                        </FileUploadRoot> */}
+                        {/* <Input
+                            {...register("file", {
+                                required: "This field is required",
+                            })}
+                            type="file"
+                            // value={password}
+                            fontSize={"md"}
+                            color={"black"}
+                            backgroundColor={"white"}
+                            placeholder="Confirm your password"
+                            // onChange={(e) => setPassword(e.target.value)}
+                        /> */}
+                        <Input
+                            padding={"1.5"}
+                            paddingLeft={"2"}
+                            onChange={handleFileChange}
+                            type="file"
+                            accept="image/*"
+                            css={{
+                                "::fileSelectorButton": {
+                                    height: "10px",
+                                    padding: "0",
+                                    margin: "100px 16px",
+                                    background: "none",
+                                    border: "none",
+                                    fontWeight: "bold",
+                                },
+                                cursor: "pointer",
+                            }}
+                        />
                     </Field>
                 </Fieldset.Content>
 
-                <Button type="submit" size={"lg"} width={"40%"} borderRadius={"2xl"} alignSelf="center">
+                <Button type="submit" loading={loading} loadingText="Saving..." size={"lg"} width={"40%"} borderRadius={"2xl"} alignSelf="center">
                     Register New User
                 </Button>
             </Fieldset.Root>
