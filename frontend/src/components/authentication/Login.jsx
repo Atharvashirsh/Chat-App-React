@@ -1,9 +1,12 @@
-import { Input, Button, Fieldset, Text } from "@chakra-ui/react";
+import { Input, Fieldset, Text } from "@chakra-ui/react";
+import { Button } from "../ui/button";
 import { Field } from "../ui/field";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
+import { useState } from "react";
 
 const Login = () => {
+    const [loading, setLoading] = useState(false);
     const {
         register,
         handleSubmit,
@@ -12,6 +15,7 @@ const Login = () => {
     } = useForm();
 
     const formSubmit = async (data) => {
+        setLoading(true);
         try {
             const response = await axios.post("http://localhost:3000/api/user/login", data);
             alert(response.data.message);
@@ -20,6 +24,7 @@ const Login = () => {
                 alert(error.response.data.message);
             }
         } finally {
+            setLoading(false);
             reset();
         }
     };
@@ -66,7 +71,7 @@ const Login = () => {
                     )}
                 </Fieldset.Content>
 
-                <Button type="submit" size={"lg"} width={"30%"} borderRadius={"2xl"} alignSelf="center">
+                <Button type="submit" loading={loading} loadingText="Logging in..." size={"lg"} width={"30%"} borderRadius={"2xl"} alignSelf="center">
                     Login
                 </Button>
             </Fieldset.Root>
