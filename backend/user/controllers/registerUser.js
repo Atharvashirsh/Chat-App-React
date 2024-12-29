@@ -22,6 +22,7 @@ const registerUser = async (request, response) => {
 
     const addUser = await UserServices.addNewUser(userData);
 
+    console.table(addUser);
     if (addUser.affectedRows > 0) {
         return response.status(201).json({ message: "User registered successfully", data: { ...userData, token: AuthUtils.generateToken(email) } });
     }

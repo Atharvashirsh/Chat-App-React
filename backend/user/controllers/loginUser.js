@@ -22,7 +22,10 @@ const loginUser = async (request, response) => {
         return response.status(400).json({ message: "Password is invalid" });
     }
 
-    return response.status(200).json({ message: "User login successful", data: { id: userLoginDetails[0].id, email: userLoginDetails[0].email, token: AuthUtils.generateToken(email) } });
+    const userInfo = { id: userLoginDetails[0].id, name: userLoginDetails[0].name, email: userLoginDetails[0].email, pic: userLoginDetails[0].pic };
+    const token = AuthUtils.generateToken(userInfo);
+
+    response.status(200).json({ message: "User login successful", data: { id: userLoginDetails[0].id, email: userLoginDetails[0].email, token: token } });
 };
 
 module.exports = loginUser;
