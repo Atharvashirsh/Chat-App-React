@@ -13,7 +13,7 @@ const AuthPage = () => {
 
             <Box p="4" w="100%" bg={"#2C3E50"} m="15px 0 15px 0" borderRadius="lg">
                 <Tabs.Root defaultValue="login" justify={"center"} fitted variant="plain" colorPalette={"purple"} size={"lg"}>
-                    <Tabs.List bg="" rounded="1" p="2">
+                    <Tabs.List rounded="1" p="2">
                         <Tabs.Trigger value="login" color={"black"}>
                             Login
                         </Tabs.Trigger>

@@ -3,11 +3,13 @@ import { Button } from "../ui/button";
 import { Field } from "../ui/field";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 
 const Register = () => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const {
         register,
@@ -26,6 +28,8 @@ const Register = () => {
     };
 
     const formSubmit = async (data) => {
+        if (errors.password) return;
+
         setLoading(true);
         try {
             if (file) {
@@ -47,6 +51,7 @@ const Register = () => {
             const response = await axios.post("http://localhost:3000/api/user", data);
 
             alert(response.data.message);
+            navigate("/");
         } catch (error) {
             if (error instanceof AxiosError) {
                 alert(error.response.data.message);
@@ -172,7 +177,7 @@ const Register = () => {
                     </Field>
                 </Fieldset.Content>
 
-                <Button type="submit" loading={loading} loadingText="Saving..." size={"lg"} width={"40%"} borderRadius={"2xl"} alignSelf="center">
+                <Button type="submit" loading={loading} loadingText="Saving..." size={"lg"} fontSize={"lg"} width={"100%"} borderRadius={"2xl"} alignSelf="center">
                     Register New User
                 </Button>
             </Fieldset.Root>
